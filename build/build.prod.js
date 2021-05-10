@@ -1,8 +1,12 @@
 
 const path = require('path')
-const scopeCssPlugin = require('scoped-css-plugin')
+const scopedCssPlugin = require('scoped-css-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
+const config = {
+  version: '1.0.0'
+}
 const resolvePath = (...pathSnippet) => path.resolve(path.join(__dirname, '../src' , ...pathSnippet))
 
 const webpackConfig = {
@@ -27,12 +31,21 @@ const webpackConfig = {
       {
         test: /\.css$/,
         include: [resolvePath()],
-        loader: 'css-loader',
+        loader: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          'less-loader',
+          'scoped-css-plugin',
+        ],
       }
     ]
   },
   plugins: [
-    new scopeCssPlugin({
+    new MiniCssExtractPlugin({
+      filename: '[id]_' + config.version + '_[hash].css',
+      chunkFilename: '[id]_' + config.version + '_[hash].css'
+    }),
+    new scopedCssPlugin.plugin({
       name: 'self plugin',
     }),
     new HtmlWebpackPlugin({
