@@ -1,6 +1,6 @@
 
 const path = require('path')
-const scopedCssPlugin = require('scoped-css-plugin')
+// const scopedCssPlugin = require('scoped-css-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
@@ -13,6 +13,12 @@ const webpackConfig = {
   mode: process.env.NODE_ENV,
   devtool: 'eval-source-map',
 
+  devServer: {
+    contentBase: path.join(__dirname, 'dist'),
+    compress: true,
+    port: 9000,
+  },
+
   entry: [resolvePath(`index.js`)],
   output: {
     filename: '[id].js',
@@ -24,15 +30,11 @@ const webpackConfig = {
       {
         test: /\.jsx?$/,
         include: [resolvePath()],
-        use: [
-          {
-            loader: 'babel-loader',
-            options: {
-              cacheDirectory: true,
-              presets: ['@babel/preset-react']
-            },
-          },
-        ]
+        loader: 'babel-loader',
+        options: {
+          cacheDirectory: true,
+          presets: ['@babel/preset-react']
+        }
       },
       {
         test: /\.css$/,
@@ -51,9 +53,9 @@ const webpackConfig = {
       filename: '[id]_' + config.version + '_[hash].css',
       chunkFilename: '[id]_' + config.version + '_[hash].css'
     }),
-    new scopedCssPlugin({
-      name: 'self plugin - scopedCssPlugin',
-    }),
+    // new scopedCssPlugin.plugin({
+    //   name: 'self plugin',
+    // }),
     new HtmlWebpackPlugin({
       template: 'index.html',
       title: 'HtmlWebpackPlugin Title',
