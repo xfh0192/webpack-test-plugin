@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack serve --config build/build.dev.js",
-    "build": "cross-env NODE_ENV=production rimraf ./dist && webpack --config build/build.prod.js --color",
+    "build": "cross-env NODE_ENV=development rimraf ./dist && webpack --config build/build.prod.js --color",
+    "real-build": "cross-env NODE_ENV=production rimraf ./dist && webpack --config build/build.prod.js --color",
     "test": "node-nightly --inspect-brk ./node_modules/webpack/bin/webpack.js --config build/build.prod.js",
     "openWeb": "http-server -p 8080 ./dist"
   },
@@ -24,8 +25,12 @@
     "mini-css-extract-plugin": "^1.6.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "style-loader": "^2.0.0",
     "webpack": "^4.17.1",
     "webpack-cli": "^4.2.0",
     "webpack-dev-server": "^3.11.2"
+  },
+  "dependencies": {
+    "lodash": "^4.17.21"
   }
 }

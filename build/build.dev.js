@@ -1,6 +1,6 @@
 
 const path = require('path')
-// const scopedCssPlugin = require('scoped-css-plugin')
+const ScopedCssPlugin = require('scoped-css-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
@@ -30,32 +30,39 @@ const webpackConfig = {
       {
         test: /\.jsx?$/,
         include: [resolvePath()],
-        loader: 'babel-loader',
-        options: {
-          cacheDirectory: true,
-          presets: ['@babel/preset-react']
-        }
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              cacheDirectory: true,
+              presets: ['@babel/preset-react']
+            },
+          }, {
+            loader: ScopedCssPlugin.ScopedJsLoader
+          }
+        ]
       },
       {
         test: /\.css$/,
         include: [resolvePath()],
         loader: [
-          MiniCssExtractPlugin.loader,
-          'css-loader',
-          'less-loader',
-          // 'scoped-css-plugin',
+          // MiniCssExtractPlugin.loader,
+          // 'style-loader', // 从 JS 中创建样式节点
+          'css-loader', // 转化 CSS 为 CommonJS
+          // 'less-loader',
+          ScopedCssPlugin.ScopedCssLoader,
         ],
       }
     ]
   },
   plugins: [
-    new MiniCssExtractPlugin({
-      filename: '[id]_' + config.version + '_[hash].css',
-      chunkFilename: '[id]_' + config.version + '_[hash].css'
-    }),
-    // new scopedCssPlugin.plugin({
-    //   name: 'self plugin',
+    // new MiniCssExtractPlugin({
+    //   filename: '[id]_' + config.version + '_[hash].css',
+    //   chunkFilename: '[id]_' + config.version + '_[hash].css'
     // }),
+    new ScopedCssPlugin({
+      name: 'self plugin',
+    }),
     new HtmlWebpackPlugin({
       template: 'index.html',
       title: 'HtmlWebpackPlugin Title',
